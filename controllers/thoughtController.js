@@ -2,7 +2,7 @@ const { User, Thought } = require('../models');
 
 //Creating a 'thoughts controller' to handle all CRUD operations for this model
 const thoughtsController = {
-    
+
     //GET ALL THOUGHTS
     getThoughts(req, res) {
         Thought.find({})
@@ -23,36 +23,85 @@ const thoughtsController = {
         Thought.findOne({
             _id: params.id
         })
-        .populate({
-            path: 'reactions',
-            select: '-__v'
-        })
-        .select('-__v')
-        .then(thoughtData => {
-            if(!thoughtData){
-                res.status(404).json({message: 'No existing thoughts match this ID'});
-                return;
-            }
-            res.json(thoughtData)
-        })
-        .catch(err => {
-            console.log(err);
-            res.sendStatus(400);
-        });
+            .populate({
+                path: 'reactions',
+                select: '-__v'
+            })
+            .select('-__v')
+            .then(thoughtData => {
+                if (!thoughtData) {
+                    res.status(404).json({ message: 'No existing thoughts match this ID' });
+                    return;
+                }
+                res.json(thoughtData)
+            })
+            .catch(err => {
+                console.log(err);
+                res.sendStatus(400);
+            });
     },
 
     //CREATE A NEW THOUGHT
-    createThought({ body }, res){
+    createThought({ body }, res) {
         Thought.create(body)
-        .then(thoughtData => {
-            User.findOneAndUpdate(
-                { _id: body.userId },
-                { $push: { thoughts: thoughtData._id }},
-                { new: true }
-            )
-            .then(userData => {
-                res.status(404).json({ message: 'No existing users match this ID'})
+            .then(thoughtData => {
+                User.findOneAndUpdate(
+                    { _id: body.userId },
+                    { $push: { thoughts: thoughtData._id } },
+                    { new: true }
+                )
+                    .then(userData => {
+                        res.status(404).json({ message: 'No existing users match this ID' })
+                    })
             })
+    },
+
+    //UPDATE AN EXISTING THOUGHT -- PASS THE ID THROUGH AS A PARAM
+    updateThought({ params, body }, res) {
+        Thought.findOneAndUpdate(
+            { _id: params.id },
+            body,
+            { new: true }
+        )
+            .populate(
+                {
+                    path: 'reactions',
+                    select: '-__v'
+                }
+            )
+            .select('-__v')
+            .then(thoughtData => {
+                if(!thoughtData){
+                    res.status(400).json({ message: 'No existing thoughts match this ID'});
+                    return;
+                }
+                res.json(thoughtData)
+            })
+            .catch(err => {
+                console.log(err);
+                res.sendStatus(400)
+            })
+    },
+
+    //DELETE AN EXISTING THOUGHT -- PASS THE ID THROUGH AS A PARAM
+    deleteThought({params}, res){
+        Thought.findOneAndDelete(
+            {
+                _id: params.id
+            }
+        )
+        .then(thoughtData => {
+            if(!thoughtData){
+                res.status(404).json({ message: 'No existing thoughts match this ID'});
+                return;
+            }
+            res.json(thoughtData);
         })
-    }
+        .catch(err => {
+            console.log(err);
+            res.sendStatus(400)
+        })
+    },
+
+    
 }
