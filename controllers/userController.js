@@ -79,26 +79,74 @@ const userContoller = {
 
 
     //DELETE A USER GIVEN THE ID
-    deleteUser({params}, res){
+    deleteUser({ params }, res) {
         User.findOneAndDelete(
-            {_id: params.id}
+            { _id: params.id }
         )
-        .then(userData => {
-            if(!userData){
-                res.status(404).json({ message: 'No existing user matches this ID' });
-                return;
-            }
-            res.json(userData);
-        })
-        .catch(err => {
-            console.log(err);
-            res.sendStatus(400)
-        })
+            .then(userData => {
+                if (!userData) {
+                    res.status(404).json({ message: 'No existing user matches this ID' });
+                    return;
+                }
+                res.json(userData);
+            })
+            .catch(err => {
+                console.log(err);
+                res.sendStatus(400)
+            })
     },
 
     //ADD A FRIEND TO A USER
-    addFriend({params}, res){
-        User.findOneAndUpdate
+    addFriend({ params }, res) {
+        User.findOneAndUpdate(
+            { _id: params.id },
+            { $push: { friends: params.friendId } },
+            { new: true }
+        )
+            .populate({
+                path: 'friends',
+                select: '-__v'
+            })
+            .select('-__v')
+            .then(userData => {
+                if (!userData) {
+                    res.status(404).json({ message: 'No existing user matches this ID' });
+                    return;
+                }
+                res.json(userData);
+            })
+            .catch(err => {
+                console.log(err);
+                res.sendStatus(400)
+            })
+    },
+
+    //DELETE A FRIEND FROM A USER
+    deleteFriend({ params }, res) {
+        User.findOneAndUpdate(
+            { _id: params.id },
+            { $pull: { friends: params.friendId } },
+            { new: true }
+        )
+            .populate({
+                path: 'friends',
+                select: '-__v'
+            }
+            )
+            .select('-__v')
+            .then(userData => {
+                if (!userData) {
+                    res.status(404).json({ message: 'No existing user matches this ID' });
+                    return;
+                }
+                res.json(userData)
+            })
+            .catch(err => {
+                console.log(err);
+                res.sendStatus(400)
+            })
     }
 
-}
+};
+
+module.exports = userContoller;
