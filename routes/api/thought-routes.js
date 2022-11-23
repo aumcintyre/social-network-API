@@ -14,10 +14,10 @@ const {
 router.route('/').get(getThoughts);
 
 //Thought ID Route (GET, PUT, DELETE) at: /api/thoughts/:id
-router.route('/:id').get(getOneThought).put(updateThought).delete(deleteThought);
+router.route('/:id').get(getOneThought).put(updateThought).delete(deleteThought).post(createThought);
 
 //Thought Post Route Using friendID as a Parameter at: /api/thoughts/:userId
-router.route('/:userId').post(createThought);
+// router.route('/:userId').post(createThought);
 
 //Reaction Route (POST) at: /api/thoughts/:thoughtId/reactions
 router.route('/:thoughtId/reactions').post(createReaction);
