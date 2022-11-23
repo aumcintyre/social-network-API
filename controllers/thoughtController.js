@@ -20,9 +20,9 @@ const thoughtsController = {
 
     //GET ONE THOUGHT BY ID
     getOneThought(req, res) {
-        Thought.findOne({
-            _id: params.id
-        })
+        Thought.findOne(
+            { _id: params.id }
+        )
             .populate({
                 path: 'reactions',
                 select: '-__v'
@@ -71,8 +71,8 @@ const thoughtsController = {
             )
             .select('-__v')
             .then(thoughtData => {
-                if(!thoughtData){
-                    res.status(400).json({ message: 'No existing thoughts match this ID'});
+                if (!thoughtData) {
+                    res.status(400).json({ message: 'No existing thoughts match this ID' });
                     return;
                 }
                 res.json(thoughtData)
@@ -84,24 +84,70 @@ const thoughtsController = {
     },
 
     //DELETE AN EXISTING THOUGHT -- PASS THE ID THROUGH AS A PARAM
-    deleteThought({params}, res){
+    deleteThought({ params }, res) {
         Thought.findOneAndDelete(
-            {
-                _id: params.id
-            }
+            { _id: params.id }
         )
-        .then(thoughtData => {
-            if(!thoughtData){
-                res.status(404).json({ message: 'No existing thoughts match this ID'});
-                return;
-            }
-            res.json(thoughtData);
-        })
-        .catch(err => {
-            console.log(err);
-            res.sendStatus(400)
-        })
+            .then(thoughtData => {
+                if (!thoughtData) {
+                    res.status(404).json({ message: 'No existing thoughts match this ID' });
+                    return;
+                }
+                res.json(thoughtData);
+            })
+            .catch(err => {
+                console.log(err);
+                res.sendStatus(400)
+            })
     },
 
-    
+    //CREATE A NEW REACTION
+    createReaction({ params, body }, res) {
+        Thought.findOneAndUpdate(
+            { _id: params.thoughtId },
+            { $push: { reactions: body } },
+            { new: true },
+            { runValidators: true }
+        )
+            .populate(
+                {
+                    path: 'reactions',
+                    select: '-__v'
+                }
+            )
+            .select('-__v')
+            .then(thoughtData => {
+                if (!thoughtData) {
+                    res.status(404).json({ message: 'No existing thoughts match this ID' });
+                    return;
+                }
+                res.json(thoughtData);
+            })
+            .catch(err => {
+                console.log(err);
+                res.sendStatus(400)
+            })
+    },
+
+    //DELETE AN EXISTING REACTION
+    deleteReaction({ params }, res) {
+        Thought.findOneAndUpdate(
+            { _id: params.thoughtID },
+            { $pull: { reactions: { reactionId: params.reactionId } } },
+            { new: true }
+        )
+            .then(thoughtData => {
+                if (!thoughtData) {
+                    res.status(404).json({ message: 'No existing thoughts match this ID' });
+                    return;
+                }
+                res.json(thoughtData);
+            })
+            .catch(err => {
+                console.log(err);
+                res.sendStatus(400)
+            })
+    }
 }
+
+module.exports = thoughtsController;
