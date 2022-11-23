@@ -42,28 +42,6 @@ const thoughtsController = {
     },
 
     //CREATE A NEW THOUGHT
-    // createThought({ params, body }, res) {
-    //     Thought.create(body)
-    //         .then(({ _id }) => {
-    //             return User.findOneAndUpdate(
-    //                 { _id: params.userId },
-    //                 { $push: { thought: _id } },
-    //                 { new: true }
-    //             )
-    //         })
-    //         .then(thoughtData => {
-    //             if (!thoughtData) {
-    //                 res.status(404).json({ message: 'No existing users match this ID' });
-    //                 return;
-    //             }
-    //             res.json(thoughtData)
-    //         })
-    //         .catch(err => {
-    //             console.log(err);
-    //             res.sendStatus(400);
-    //         });
-    // },
-
     createThought({ body }, res) {
         Thought.create(body)
             .then(thoughtData => {
