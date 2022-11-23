@@ -10,13 +10,19 @@ const {
     deleteReaction
 } = require('../../controllers/thoughtController');
 
-//Home Route (GET, POST) at: /api/thoughts
+//Home Route (GET) at: /api/thoughts
 router.route('/').get(getThoughts);
 
-//User ID Route (GET, PUT, DELETE) at: /api/users/:id
+//Thought ID Route (GET, PUT, DELETE) at: /api/thoughts/:id
 router.route('/:id').get(getOneThought).put(updateThought).delete(deleteThought);
 
-//FRIEND ID ROUTE (POST, DELETE) at: /api/users/:id/friends/:friendId
-router.route('/:id/friends/:friendId').post(addFriend).delete(deleteFriend);
+//Thought Post Route Using friendID as a Parameter at: /api/thoughts/:userId
+router.route('/:userId').post(createThought);
+
+//Reaction Route (POST) at: /api/thoughts/:thoughtId/reactions
+router.route('/:thoughtId/reactions').post(createReaction);
+
+//Reaction Route (DELETE) at: /api/thoughts/:thoughtId/reactionId
+router.route('/:thoughtId/reactions/:reactionId').delete(deleteReaction);
 
 module.exports = router;
