@@ -42,18 +42,26 @@ const thoughtsController = {
     },
 
     //CREATE A NEW THOUGHT
-    createThought({ body }, res) {
+    createThought({ params, body }, res) {
         Thought.create(body)
-            .then(thoughtData => {
-                User.findOneAndUpdate(
-                    { _id: body.userId },
-                    { $push: { thoughts: thoughtData._id } },
+            .then(({ _id }) => {
+                return User.findOneAndUpdate(
+                    { _id: params.userId },
+                    { $push: { thought: _id } },
                     { new: true }
                 )
-                    .then(userData => {
-                        res.status(404).json({ message: 'No existing users match this ID' })
-                    })
             })
+            .then(thoughtData => {
+                if (!thoughtData) {
+                    res.status(404).json({ message: 'No existing users match this ID' });
+                    return;
+                }
+                res.json(thoughtData)
+            })
+            .catch(err => {
+                console.log(err);
+                res.sendStatus(400);
+            });
     },
 
     //UPDATE AN EXISTING THOUGHT -- PASS THE ID THROUGH AS A PARAM
@@ -83,70 +91,70 @@ const thoughtsController = {
             })
     },
 
-    //DELETE AN EXISTING THOUGHT -- PASS THE ID THROUGH AS A PARAM
-    deleteThought({ params }, res) {
-        Thought.findOneAndDelete(
-            { _id: params.id }
-        )
-            .then(thoughtData => {
-                if (!thoughtData) {
-                    res.status(404).json({ message: 'No existing thoughts match this ID' });
-                    return;
-                }
-                res.json(thoughtData);
-            })
-            .catch(err => {
-                console.log(err);
-                res.sendStatus(400)
-            })
-    },
+        //DELETE AN EXISTING THOUGHT -- PASS THE ID THROUGH AS A PARAM
+        deleteThought({ params }, res) {
+    Thought.findOneAndDelete(
+        { _id: params.id }
+    )
+        .then(thoughtData => {
+            if (!thoughtData) {
+                res.status(404).json({ message: 'No existing thoughts match this ID' });
+                return;
+            }
+            res.json(thoughtData);
+        })
+        .catch(err => {
+            console.log(err);
+            res.sendStatus(400)
+        })
+},
 
-    //CREATE A NEW REACTION
-    createReaction({ params, body }, res) {
-        Thought.findOneAndUpdate(
-            { _id: params.thoughtId },
-            { $push: { reactions: body } },
-            { new: true, runValidators: true  },
+//CREATE A NEW REACTION
+createReaction({ params, body }, res) {
+    Thought.findOneAndUpdate(
+        { _id: params.thoughtId },
+        { $push: { reactions: body } },
+        { new: true, runValidators: true },
+    )
+        .populate(
+            {
+                path: 'reactions',
+                select: '-__v'
+            }
         )
-            .populate(
-                {
-                    path: 'reactions',
-                    select: '-__v'
-                }
-            )
-            .select('-__v')
-            .then(thoughtData => {
-                if (!thoughtData) {
-                    res.status(404).json({ message: 'No existing thoughts match this ID' });
-                    return;
-                }
-                res.json(thoughtData);
-            })
-            .catch(err => {
-                console.log(err);
-                res.sendStatus(400)
-            })
-    },
+        .select('-__v')
+        .then(thoughtData => {
+            if (!thoughtData) {
+                res.status(404).json({ message: 'No existing thoughts match this ID' });
+                return;
+            }
+            res.json(thoughtData);
+        })
+        .catch(err => {
+            console.log(err);
+            res.sendStatus(400)
+        })
+},
 
-    //DELETE AN EXISTING REACTION
-    deleteReaction({ params }, res) {
-        Thought.findOneAndUpdate(
-            { _id: params.thoughtID },
-            { $pull: { reactions: { reactionId: params.reactionId } } },
-            { new: true }
-        )
-            .then(thoughtData => {
-                if (!thoughtData) {
-                    res.status(404).json({ message: 'No existing thoughts match this ID' });
-                    return;
-                }
-                res.json(thoughtData);
-            })
-            .catch(err => {
-                console.log(err);
-                res.sendStatus(400)
-            })
-    }
+//DELETE AN EXISTING REACTION
+deleteReaction({ params }, res) {
+    Thought.findOneAndUpdate(
+        { _id: params.thoughtID },
+        { $pull: { reactions: { reactionId: params.reactionId } } },
+        { new: true }
+    )
+        .then(thoughtData => {
+            if (!thoughtData) {
+                res.status(404).json({ message: 'No existing thoughts match this ID' });
+                return;
+            }
+            res.json(thoughtData);
+        })
+        .catch(err => {
+            console.log(err);
+            res.sendStatus(400)
+        })
+}
 }
 
 module.exports = thoughtsController;
