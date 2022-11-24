@@ -1,16 +1,16 @@
-# Social Network API 💬
+# Social Network API
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/siennameow/social-network-API/blob/main/LICENSE)
 
-## Description 📝
+## Description
 
 This Social Network API is an application where clients can create a new user. They can then friend other users, create their own thoughts, or add reactions to other user's thoughts. Clients can also update or delete thoughts and reactions, and can also remove any previously added friends.
 
-## Table of Contents 📖
+## Table of Contents
 
 - [Installation](#installation-)
 - [Usage](#usage-)
-- [Technologies 🔧](#technologies-)
+- [Technologies](#technologies-)
 - [Tests](#tests)
 - [Contribution](#contribution-)
 - [Questions](#questions-)
