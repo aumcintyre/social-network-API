@@ -1,24 +1,58 @@
-# social-network-API
-A simple Social Network API built using MongoDB
+# Social Network API 💬
 
-## User Story
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/siennameow/social-network-API/blob/main/LICENSE)
 
-```
-AS A social media startup
-I WANT an API for my social network that uses a NoSQL database
-SO THAT my website can handle large amounts of unstructured data
-```
+## Description 📝
 
-## Acceptance Criteria
+This Social Network API is an application where clients can create a new user. They can then friend other users, create their own thoughts, or add reactions to other user's thoughts. Clients can also update or delete thoughts and reactions, and can also remove any previously added friends.
 
-```
-GIVEN a social network API
-WHEN I enter the command to invoke the application
-THEN my server is started and the Mongoose models are synced to the MongoDB database
-WHEN I open API GET routes in Insomnia Core for users and thoughts
-THEN the data for each of these routes is displayed in a formatted JSON
-WHEN I test API POST, PUT, and DELETE routes in Insomnia Core
-THEN I am able to successfully create, update, and delete users and thoughts in my database
-WHEN I test API POST and DELETE routes in Insomnia Core
-THEN I am able to successfully create and delete reactions to thoughts and add and remove friends to a user’s friend list
-```
+## Table of Contents 📖
+
+- [Installation](#installation-)
+- [Usage](#usage-)
+- [Technologies 🔧](#technologies-)
+- [Tests](#tests)
+- [Contribution](#contribution-)
+- [Questions](#questions-)
+
+
+## Installation 
+
+- Clone this repository
+- Run installation using `npm i` in the terminal.
+
+## Usage 
+
+- Start the application with `npm start`.
+- When the server is started, the Mongoose models are synched to the MongoDB database.
+- Open MongoDB and connect to the MongoDB URI `mongodb://localhost:27017`. On the list of databases, click on `socialDB` to see `thoughts` and `users` data.
+- To create seed data and test the API routes, use [Insomnia](https://insomnia.rest/download). Also, see the Tests section below.
+
+## Technologies
+
+- [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+- [Express.js](https://expressjs.com/)
+- [Node.js](https://nodejs.org/en/)
+- [MongoDB](https://www.mongodb.com/)
+- [Mongoose](https://mongoosejs.com/)
+- [Insomnia](https://insomnia.rest/)
+- [Moment.js](https://www.npmjs.com/package/moment)
+
+## Tests
+
+Routes can be tested using Insomnia. More information on the specific routes can be found in the comments throughout the code.
+
+
+
+## License
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/siennameow/social-network-API/blob/main/LICENSE)
+MIT License
+
+Copyright (c) 2022
+
+## Questions
+
+For more information, feel free to email me here at : aumcintyre@gmail.com<br/>
+My Github page is [aumcintyre](https://github.com/aumcintyre)
+
